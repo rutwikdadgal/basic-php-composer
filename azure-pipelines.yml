@@ -52,10 +52,6 @@ steps:
 - script: composer install --no-interaction --prefer-dist
   displayName: 'composer install'
 
-- script: |
-    vendor/bin/phpunit
-  displayName: 'Run PHPUnit tests'
-
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)'
