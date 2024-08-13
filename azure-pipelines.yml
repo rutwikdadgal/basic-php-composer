@@ -52,6 +52,11 @@ steps:
 - script: composer install --no-interaction --prefer-dist
   displayName: 'composer install'
 
+- script: |
+    # Install zip utility
+    sudo apt-get install -y zip
+  displayName: 'Install zip utility'
+  
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)'
