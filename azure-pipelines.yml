@@ -62,7 +62,7 @@ steps:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: true
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
     replaceExistingArchive: true
   displayName: 'Archive source code'
 
