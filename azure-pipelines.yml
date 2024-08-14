@@ -26,15 +26,6 @@ steps:
   displayName: 'Install PHP 7.4 from PPA'
 
 - script: |
-    composer install --no-dev --optimize-autoloader
-  displayName: 'Install PHP dependencies'
-
-- script: |
-    zip -r yii-app.zip . -x "*.git*" # Create a ZIP file of the application excluding the .git directory
-  displayName: 'Package application'
-
-
-- script: |
     sudo update-alternatives --install /usr/bin/php php /usr/bin/php7.4 1
     sudo update-alternatives --install /usr/bin/phar phar /usr/bin/phar7.4 1
     sudo update-alternatives --install /usr/bin/phpdbg phpdbg /usr/bin/phpdbg7.4 1
@@ -63,19 +54,19 @@ steps:
     sudo apt-get install -y zip
   displayName: 'Install zip utility'
   
-# - task: ArchiveFiles@2
-#   inputs:
-#     rootFolderOrFile: '$(Build.SourcesDirectory)'
-#     includeRootFolder: true
-#     archiveType: 'zip'
-#     archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
-#     replaceExistingArchive: true
-#   displayName: 'Archive source code'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+    replaceExistingArchive: true
+  displayName: 'Archive source code'
 
 
-# - task: PublishBuildArtifacts@1
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#     ArtifactName: 'drop'
-#     publishLocation: 'Container'
-#   displayName: 'Publish build artifacts'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish build artifacts'
