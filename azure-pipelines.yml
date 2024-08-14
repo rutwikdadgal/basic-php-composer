@@ -10,7 +10,6 @@ pool:
   name: default
 
 steps:
-steps:
 - task: UsePhpVersion@0
   inputs:
     versionSpec: '7.4' # Specify your PHP version
