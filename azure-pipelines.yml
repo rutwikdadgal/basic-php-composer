@@ -10,6 +10,11 @@ pool:
   name: default
 
 steps:
+steps:
+- task: UsePhpVersion@0
+  inputs:
+    versionSpec: '7.4' # Specify your PHP version
+    addToPath: true
 - script: |
     # Update package lists and install prerequisites
     sudo apt-get update
@@ -18,29 +23,35 @@ steps:
     # Add Ondrej PHP PPA
     sudo add-apt-repository -y ppa:ondrej/php
     sudo apt-get update
+    sudo apt-get install -y apache2
 
-    # Install PHP 7.2 and common packages
-    sudo apt-get install -y php7.2 php7.2-cli php7.2-common php7.2-dev
+    # Install PHP 7.4 and common packages
+    sudo apt-get install -y php7.4 php7.4-cli php7.4-fpm php7.4-mysql php7.4-mbstring php7.4-xml php7.4-json php7.4-curl php7.4-zip unzip
     php -v
-  displayName: 'Install PHP 7.2 from PPA'
-
-- script: |
-    sudo update-alternatives --install /usr/bin/php php /usr/bin/php7.2 1
-    sudo update-alternatives --install /usr/bin/phar phar /usr/bin/phar7.2 1
-    sudo update-alternatives --install /usr/bin/phpdbg phpdbg /usr/bin/phpdbg7.2 1
-    sudo update-alternatives --install /usr/bin/php-cgi php-cgi /usr/bin/php-cgi7.2 1
-    sudo update-alternatives --install /usr/bin/phar.phar phar.phar /usr/bin/phar.phar7.2 1
-    sudo update-alternatives --set php /usr/bin/php7.2
-    sudo update-alternatives --set phar /usr/bin/phar7.2
-    sudo update-alternatives --set phpdbg /usr/bin/phpdbg7.2
-    sudo update-alternatives --set php-cgi /usr/bin/php-cgi7.2
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar7.2
-    php -v
-  displayName: 'Configure PHP version 7.2'
+  displayName: 'Install PHP 7.4 from PPA'
 
 - script: |
+    composer install --no-dev --optimize-autoloader
+  displayName: 'Install PHP dependencies'
+
+- script: |
+    zip -r yii-app.zip . -x "*.git*" # Create a ZIP file of the application excluding the .git directory
+  displayName: 'Package application'
+
+
+- script: |
+    sudo update-alternatives --install /usr/bin/php php /usr/bin/php7.4 1
+    sudo update-alternatives --install /usr/bin/phar phar /usr/bin/phar7.4 1
+    sudo update-alternatives --install /usr/bin/phpdbg phpdbg /usr/bin/phpdbg7.4 1
+    sudo update-alternatives --install /usr/bin/php-cgi php-cgi /usr/bin/php-cgi7.4 1
+    sudo update-alternatives --install /usr/bin/phar.phar phar.phar /usr/bin/phar.phar7.4 1
+    sudo update-alternatives --set php /usr/bin/php7.4
+    sudo update-alternatives --set phar /usr/bin/phar7.4
+    sudo update-alternatives --set phpdbg /usr/bin/phpdbg7.4
+    sudo update-alternatives --set php-cgi /usr/bin/php-cgi7.4
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar7.4
     php -v
-  displayName: 'Check default PHP version'
+  displayName: 'Configure PHP version 7.4'
 
 - script: |
     # Install Composer
@@ -57,19 +68,19 @@ steps:
     sudo apt-get install -y zip
   displayName: 'Install zip utility'
   
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
-    replaceExistingArchive: true
-  displayName: 'Archive source code'
+# - task: ArchiveFiles@2
+#   inputs:
+#     rootFolderOrFile: '$(Build.SourcesDirectory)'
+#     includeRootFolder: true
+#     archiveType: 'zip'
+#     archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+#     replaceExistingArchive: true
+#   displayName: 'Archive source code'
 
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-  displayName: 'Publish build artifacts'
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     ArtifactName: 'drop'
+#     publishLocation: 'Container'
+#   displayName: 'Publish build artifacts'
