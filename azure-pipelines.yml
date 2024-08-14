@@ -10,10 +10,6 @@ pool:
   name: default
 
 steps:
-- task: UsePhpVersion@0
-  inputs:
-    versionSpec: '7.4' # Specify your PHP version
-    addToPath: true
 - script: |
     # Update package lists and install prerequisites
     sudo apt-get update
